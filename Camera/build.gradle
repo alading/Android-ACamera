@@ -7,7 +7,7 @@ ext {
     publishedGroupId = 'com.alading'
     libraryName = 'ACamera'
     artifact = 'ACamera'
-    libraryVersion ='1.0'
+    libraryVersion ='1.1'
 
     libraryDescription = 'It is Customized Camera'
     siteUrl = ''
@@ -58,8 +58,7 @@ dependencies {
     //弹框视图
     api 'com.github.RmondJone:SpringDiaLog:1.0.6'
     api 'com.github.bumptech.glide:glide:3.7.0'
-    //权限申请
-    api 'com.yanzhenjie:permission:2.0.0-rc11'
+
 }
 
 tasks.withType(Javadoc) {

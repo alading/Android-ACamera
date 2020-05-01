@@ -1,8 +1,10 @@
 package com.rmondjone.camera;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
@@ -10,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,14 +25,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.newland.springdialog.AnimSpring;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+
 
 /**
  * @author 郭翰林
@@ -115,31 +120,69 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
      */
     private RelativeLayout rlCameraTip;
 
+
+    int PERMISSION_ALL = 1;
+    String[] PERMISSIONS = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.CAMERA
+    };
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camre_layout);
         fitComprehensiveScreen();
         mMongolianLayerType = (MongolianLayerType) getIntent().getSerializableExtra("MongolianLayerType");
-        PermissionUtils.applicationPermissions(this, new PermissionUtils.PermissionListener() {
-            @Override
-            public void onSuccess(Context context) {
-                initView();
-                setOnclickListener();
-            }
-
-            @Override
-            public void onFailed(Context context) {
-                if (AndPermission.hasAlwaysDeniedPermission(context, Permission.Group.CAMERA)
-                        && AndPermission.hasAlwaysDeniedPermission(context, Permission.Group.STORAGE)) {
-                    AndPermission.with(context).runtime().setting().start();
-                }
-                Toast.makeText(context, context.getString(R.string.permission_camra_storage), Toast.LENGTH_SHORT);
-                finish();
-            }
-        }, Permission.Group.STORAGE, Permission.Group.CAMERA);
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        } else {
+            initView();
+            setOnclickListener();
+        }
     }
 
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissionsList[], int[] grantResults) {
+        if (requestCode == PERMISSION_ALL) {
+                if (grantResults.length > 0) {
+                    int grantNumber = 0;
+                    int denyNumber =0;
+                    for (String per : permissionsList) {
+                        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                            grantNumber++;
+                        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                            denyNumber++;
+                        }
+
+                    }
+
+                    if(grantNumber == PERMISSIONS.length ) {
+                        initView();
+                        setOnclickListener();
+                    } else {
+                        Toast.makeText(this, "Permission Denied, Application Exit", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(this, "Permission Denied, Application Exit", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+        }
+    }
 
     /**
      * 作者：郭翰林
