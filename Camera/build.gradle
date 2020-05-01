@@ -1,9 +1,29 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'Android'
+    bintrayName = 'ACamera'
+
+    publishedGroupId = 'com.alading'
+    libraryName = 'ACamera'
+    artifact = 'ACamera'
+    libraryVersion ='1.0'
+
+    libraryDescription = 'It is Customized Camera'
+    siteUrl = ''
+    gitUrl = 'https://github.com/alading/Android-ACamera'
+
+    developerId = 'alading'
+    developerName = 'alading'
+    developerEmail = 'alading@gmail.com'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 19
@@ -41,3 +61,12 @@ dependencies {
     //权限申请
     api 'com.yanzhenjie:permission:2.0.0-rc11'
 }
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
