@@ -24,8 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
-import com.rmondjone.camera.dialog.AnimSpring;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -281,7 +279,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             //视图动画
             mPhotoLayout.setVisibility(View.GONE);
             mConfirmLayout.setVisibility(View.VISIBLE);
-            AnimSpring.getInstance(mConfirmLayout).startRotateAnim(120, 360);
+            //AnimSpring.getInstance(mConfirmLayout).startRotateAnim(120, 360);
             imageData = data;
             //停止预览
             mCamera.stopPreview();
@@ -294,7 +292,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private void switchFlash() {
         isFlashing = !isFlashing;
         mFlashButton.setImageResource(isFlashing ? R.mipmap.flash_open : R.mipmap.flash_close);
-        AnimSpring.getInstance(mFlashButton).startRotateAnim(120, 360);
+        //AnimSpring.getInstance(mFlashButton).startRotateAnim(120, 360);
         try {
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setFlashMode(isFlashing ? Camera.Parameters.FLASH_MODE_TORCH : Camera.Parameters.FLASH_MODE_OFF);
@@ -310,7 +308,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private void cancleSavePhoto() {
         mPhotoLayout.setVisibility(View.VISIBLE);
         mConfirmLayout.setVisibility(View.GONE);
-        AnimSpring.getInstance(mPhotoLayout).startRotateAnim(120, 360);
+        //AnimSpring.getInstance(mPhotoLayout).startRotateAnim(120, 360);
         //开始预览
         mCamera.startPreview();
         imageData = null;
