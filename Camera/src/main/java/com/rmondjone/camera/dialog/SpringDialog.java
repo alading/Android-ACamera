@@ -48,12 +48,6 @@ public class SpringDialog {
         initView();
     }
 
-
-    /**
-     * 说明 初始化控件
-     * 作者 郭翰林
-     * 创建时间 2017/1/15 上午11:20
-     */
     private void initView() {
         initDisplayOpinion();
         double radius = Math.sqrt(DisplayUtil.screenhightPx * DisplayUtil.screenhightPx + DisplayUtil.screenWidthPx * DisplayUtil.screenWidthPx);
@@ -95,11 +89,6 @@ public class SpringDialog {
         DisplayUtil.screenHightDip = DisplayUtil.px2dip(mContext, dm.heightPixels);
     }
 
-    /**
-     * 说明 显示弹框
-     * 作者 郭翰林
-     * 创建时间 2017/1/15 上午11:33
-     */
     public void show() {
         if (mRootView != null) {
             isShowing = true;
@@ -179,11 +168,7 @@ public class SpringDialog {
         }
     }
 
-    /**
-     * 说明 关闭弹框
-     * 作者 郭翰林
-     * 创建时间 2017/1/17 下午12:41
-     */
+
     public void close() {
         if (isShowing) {
             if (!isUseAnimation) {
@@ -261,13 +246,7 @@ public class SpringDialog {
         return this;
     }
 
-    /**
-     * 作者：郭翰林
-     * 时间：2018/6/4 0004 13:50
-     * 注释：获取屏幕顶层视图
-     *
-     * @return
-     */
+
     public ViewGroup getAndroidContentView() {
         return androidContentView;
     }

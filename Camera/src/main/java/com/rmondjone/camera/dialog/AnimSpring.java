@@ -8,11 +8,6 @@ import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringListener;
 import com.facebook.rebound.SpringSystem;
 
-/**
- * 说明 Spring弹性动画
- * 作者 郭翰林
- * 创建时间 2017/1/16.
- */
 
 public class AnimSpring {
     public static AnimSpring animSpring;
@@ -70,9 +65,6 @@ public class AnimSpring {
      * @param startY  开始Y坐标
      * @param endX    结束X坐标
      * @param endY    结束Y坐标
-     * 说明 设置平移动画
-     * 作者 郭翰林
-     * 创建时间 2017/1/16 上午11:02
      */
     public AnimSpring startTranslationAnim(final double startX, final double startY, double endX, double endY){
         //获取Spring对象
@@ -141,8 +133,6 @@ public class AnimSpring {
      * @param startValue  开始角度
      * @param endValue    结束角度
      * 说明 视图绕Z轴，以自己中心点为锚点旋转
-     * 作者 郭翰林
-     * 创建时间 2017/1/16 上午11:46
      */
     public AnimSpring startRotateAnim(float startValue,float endValue){
         Spring rotateSpring=springSystem.createSpring();
@@ -180,8 +170,6 @@ public class AnimSpring {
      * @param endX    结束X轴缩放系数
      * @param endY    结束Y轴缩放系数
      * 说明 视图缩放
-     * 作者 郭翰林
-     * 创建时间 2017/1/16 下午2:34
      */
     public AnimSpring startScaleAnim(final double startX, final double startY, double endX, double endY){
         //获取Spring对象

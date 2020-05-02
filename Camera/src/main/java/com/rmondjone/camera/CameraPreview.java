@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.SortedSet;
 
 /**
- * @author 郭翰林
- * @date 2019/2/28 0028 17:06
  * 注释:相机预览视图
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
@@ -40,8 +38,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 注释：构造函数
-     * 时间：2019/2/28 0028 17:10
-     * 作者：郭翰林
      *
      * @param context
      * @param mCamera
@@ -124,8 +120,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 注释：获取设备屏宽比
-     * 时间：2019/3/4 0004 12:55
-     * 作者：郭翰林
      */
     private AspectRatio getDeviceAspectRatio(Activity activity) {
         int width = activity.getWindow().getDecorView().getWidth();
@@ -135,8 +129,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 注释：选择合适的预览尺寸
-     * 时间：2019/3/4 0004 11:25
-     * 作者：郭翰林
      *
      * @param sizes
      * @return

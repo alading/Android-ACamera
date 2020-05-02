@@ -33,12 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-
-/**
- * @author 郭翰林
- * @date 2019/2/28 0028 16:23
- * 注释:Android自定义相机
- */
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String KEY_IMAGE_PATH = "imagePath";
     /**
@@ -183,11 +177,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    /**
-     * 作者：郭翰林
-     * 时间：2018/7/9 0009 8:54
-     * 注释：适配全面屏
-     */
     private void fitComprehensiveScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -214,8 +203,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：获取蒙版图片
-     * 时间：2019/3/4 0004 17:19
-     * 作者：郭翰林
      *
      * @return
      */
@@ -238,8 +225,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：设置监听事件
-     * 时间：2019/3/1 0001 11:13
-     * 作者：郭翰林
      */
     private void setOnclickListener() {
         mCancleButton.setOnClickListener(this);
@@ -274,8 +259,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：自动对焦回调
-     * 时间：2019/3/1 0001 10:02
-     * 作者：郭翰林
      */
     private Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
@@ -290,8 +273,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：拍照并保存图片到相册
-     * 时间：2019/3/1 0001 15:37
-     * 作者：郭翰林
      */
     private void takePhoto() {
         isTakePhoto = true;
@@ -309,8 +290,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：切换闪光灯
-     * 时间：2019/3/1 0001 15:40
-     * 作者：郭翰林
      */
     private void switchFlash() {
         isFlashing = !isFlashing;
@@ -327,8 +306,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：取消保存
-     * 时间：2019/3/1 0001 16:31
-     * 作者：郭翰林
      */
     private void cancleSavePhoto() {
         mPhotoLayout.setVisibility(View.VISIBLE);
@@ -371,8 +348,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：蒙版类型
-     * 时间：2019/2/28 0028 16:26
-     * 作者：郭翰林
      */
     public enum MongolianLayerType {
         /**
@@ -407,8 +382,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：初始化视图
-     * 时间：2019/3/1 0001 11:12
-     * 作者：郭翰林
      */
     private void initView() {
         mCancleButton = findViewById(R.id.cancle_button);
@@ -444,8 +417,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * 注释：保持图片
-     * 时间：2019/3/1 0001 16:32
-     * 作者：郭翰林
      */
     private void savePhoto() {
         FileOutputStream fos = null;
