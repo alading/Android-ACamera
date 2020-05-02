@@ -1,0 +1,285 @@
+package com.rmondjone.camera.dialog;
+
+import android.app.Activity;
+import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.rmondjone.camera.R;
+
+
+public class SpringDialog {
+    private Activity mContext;
+    private View mContentView; //弹框内容视图布局ID
+
+    private int mBackGroudImg = -1; //弹框背景图片
+    private int mCloseButtonImg = -1;//关闭按钮资源
+    private View.OnClickListener mCloseButtonListener;//关闭按钮点击事件
+    private boolean isOverScreen = true;    // 是否覆盖全屏幕
+    private boolean isShowCloseButton = true;//是否显示关闭按钮
+    private boolean isCanceledOnTouchOutside = true; //是否点击外围触发关闭事件
+    private int mStartAnimAngle = 270;//开始动画角度,0代表从右往左,逆时针算
+    private int mContentViewWidth = 280;//内容视图宽度
+    private int mContentViewHeight = 350;//内容视图高度
+
+
+    private ImageView mCloseButton;//关闭按钮
+    private ViewGroup androidContentView;//屏幕根视图
+    private View mRootView;//根视图
+    private RelativeLayout mContainerView; //内容视图背景视图
+    private RelativeLayout mAnimationView;//动画View;
+    private FrameLayout mContentView_FrameLayout;
+    private boolean isShowing;//弹框是否显示
+    private double heightY;
+    private double widthX;
+    private boolean isUseAnimation = true;//是否使用动画
+
+
+    public SpringDialog(Activity mContext, View mContentView) {
+        this.mContext = mContext;
+        this.mContentView = mContentView;
+        initView();
+    }
+
+
+    /**
+     * 说明 初始化控件
+     * 作者 郭翰林
+     * 创建时间 2017/1/15 上午11:20
+     */
+    private void initView() {
+        initDisplayOpinion();
+        double radius = Math.sqrt(DisplayUtil.screenhightPx * DisplayUtil.screenhightPx + DisplayUtil.screenWidthPx * DisplayUtil.screenWidthPx);
+        heightY = -Math.sin(Math.toRadians(mStartAnimAngle)) * radius;
+        widthX = Math.cos(Math.toRadians(mStartAnimAngle)) * radius;
+        if (isOverScreen) {
+            androidContentView = (ViewGroup) mContext.getWindow().getDecorView();
+        } else {
+            androidContentView = (ViewGroup) mContext.getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+        }
+        mRootView = LayoutInflater.from(mContext).inflate(R.layout.spring_dialog_layout, null);
+        if (mRootView != null) {
+            mCloseButton = (ImageView) mRootView.findViewById(R.id.iv_close);
+            mCloseButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.closebutton));
+
+            mContainerView = (RelativeLayout) mRootView.findViewById(R.id.contentView);
+
+            mAnimationView = (RelativeLayout) mRootView.findViewById(R.id.anim_container);
+
+            mContentView_FrameLayout = (FrameLayout) mRootView.findViewById(R.id.fl_content_container);
+
+        } else {
+            Log.e("控件初始化失败", "LayoutInflater获取根视图失败！");
+        }
+    }
+
+    /**
+     * 说明 初始化屏幕宽高
+     * 作者 郭翰林
+     * 创建时间 2017/1/17 下午1:50
+     */
+    private void initDisplayOpinion() {
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        DisplayUtil.density = dm.density;
+        DisplayUtil.densityDPI = dm.densityDpi;
+        DisplayUtil.screenWidthPx = dm.widthPixels;
+        DisplayUtil.screenhightPx = dm.heightPixels;
+        DisplayUtil.screenWidthDip = DisplayUtil.px2dip(mContext, dm.widthPixels);
+        DisplayUtil.screenHightDip = DisplayUtil.px2dip(mContext, dm.heightPixels);
+    }
+
+    /**
+     * 说明 显示弹框
+     * 作者 郭翰林
+     * 创建时间 2017/1/15 上午11:33
+     */
+    public void show() {
+        if (mRootView != null) {
+            isShowing = true;
+            if (isShowCloseButton) {
+                mCloseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mCloseButtonListener != null) {
+                            mCloseButtonListener.onClick(view);
+                        }
+                        if (!isUseAnimation) {
+                            androidContentView.removeView(mRootView);
+                        } else {
+                            AnimSpring.getInstance(mAnimationView).startTranslationAnim(0, 0, -widthX, -heightY);
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    androidContentView.removeView(mRootView);
+                                }
+                            }, 400);
+                        }
+                    }
+                });
+            } else {
+                mCloseButton.setVisibility(View.GONE);
+                if (isCanceledOnTouchOutside) {
+                    mRootView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!isUseAnimation) {
+                                androidContentView.removeView(mRootView);
+                            } else {
+                                AnimSpring.getInstance(mAnimationView).startTranslationAnim(0, 0, -widthX, -heightY);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        androidContentView.removeView(mRootView);
+                                    }
+                                }, 400);
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (mCloseButtonImg != -1) {
+                mCloseButton.setImageDrawable(mContext.getResources().getDrawable(mCloseButtonImg));
+            }
+            if (mBackGroudImg != -1) {
+                mContainerView.setBackground(mContext.getResources().getDrawable(mBackGroudImg));
+            }
+
+            //设置内容视图布局大小
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.width = DisplayUtil.dip2px(mContext, mContentViewWidth);
+            layoutParams.height = DisplayUtil.dip2px(mContext, mContentViewHeight);
+            mContainerView.setLayoutParams(layoutParams);
+
+            //加入视图操作
+            mContentView_FrameLayout.removeAllViews();
+            mContentView_FrameLayout.addView(mContentView);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            androidContentView.removeView(mRootView);
+            androidContentView.addView(mRootView, params);
+
+            if (isUseAnimation) {
+                //加入视图动画
+                double radius = Math.sqrt(DisplayUtil.screenhightPx * DisplayUtil.screenhightPx + DisplayUtil.screenWidthPx * DisplayUtil.screenWidthPx);
+                heightY = -Math.sin(Math.toRadians(mStartAnimAngle)) * radius;
+                widthX = Math.cos(Math.toRadians(mStartAnimAngle)) * radius;
+                AnimSpring.getInstance(mAnimationView).startTranslationAnim(widthX, heightY, 0, 0);
+            }
+        } else {
+            Log.e("控件初始化失败", "LayoutInflater获取根视图失败！");
+        }
+    }
+
+    /**
+     * 说明 关闭弹框
+     * 作者 郭翰林
+     * 创建时间 2017/1/17 下午12:41
+     */
+    public void close() {
+        if (isShowing) {
+            if (!isUseAnimation) {
+                androidContentView.removeView(mRootView);
+            } else {
+                AnimSpring.getInstance(mAnimationView).startTranslationAnim(0, 0, -widthX, -heightY);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        androidContentView.removeView(mRootView);
+                    }
+                }, 400);
+            }
+            isShowing = false;
+        } else {
+            Log.e("关闭失败", "弹框未显示！");
+        }
+    }
+
+
+    //属性初始化
+
+    public SpringDialog setBackGroudImg(int mBackGroudImg) {
+        this.mBackGroudImg = mBackGroudImg;
+        return this;
+    }
+
+    public SpringDialog setCloseButtonImg(int mCloseButtonImg) {
+        this.mCloseButtonImg = mCloseButtonImg;
+        return this;
+    }
+
+    public SpringDialog setCloseButtonListener(View.OnClickListener mCloseButtonListener) {
+        this.mCloseButtonListener = mCloseButtonListener;
+        return this;
+    }
+
+    public boolean isOverScreen() {
+        return isOverScreen;
+    }
+
+    public SpringDialog setOverScreen(boolean overScreen) {
+        isOverScreen = overScreen;
+        return this;
+    }
+
+    public SpringDialog setShowCloseButton(boolean showCloseButton) {
+        isShowCloseButton = showCloseButton;
+        return this;
+    }
+
+    public SpringDialog setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
+        isCanceledOnTouchOutside = canceledOnTouchOutside;
+        return this;
+    }
+
+    public SpringDialog setStartAnimAngle(int mStartAnimAngle) {
+        this.mStartAnimAngle = mStartAnimAngle;
+        return this;
+    }
+
+    public SpringDialog setContentViewWidth(int mContentViewWidth) {
+        this.mContentViewWidth = mContentViewWidth;
+        return this;
+    }
+
+    public SpringDialog setContentViewHeight(int mContentViewHeight) {
+        this.mContentViewHeight = mContentViewHeight;
+        return this;
+    }
+
+    public SpringDialog setUseAnimation(boolean useAnimation) {
+        isUseAnimation = useAnimation;
+        return this;
+    }
+
+    /**
+     * 作者：郭翰林
+     * 时间：2018/6/4 0004 13:50
+     * 注释：获取屏幕顶层视图
+     *
+     * @return
+     */
+    public ViewGroup getAndroidContentView() {
+        return androidContentView;
+    }
+
+    /**
+     * 作者：郭翰林
+     * 时间：2018/6/4 0004 13:51
+     * 注释：获取弹窗广告根视图
+     *
+     * @return
+     */
+    public View getRootView() {
+        return mRootView;
+    }
+}

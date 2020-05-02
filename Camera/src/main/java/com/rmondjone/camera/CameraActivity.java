@@ -23,9 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.newland.springdialog.AnimSpring;
 
+import com.rmondjone.camera.dialog.AnimSpring;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -436,7 +435,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
         //设置蒙版,护照出入境蒙版特殊处理
         if (mMongolianLayerType != MongolianLayerType.PASSPORT_ENTRY_AND_EXIT) {
-            Glide.with(this).load(getMaskImage()).into(mMaskImage);
+            mMaskImage.setImageResource(getMaskImage());
         } else {
             mMaskImage.setVisibility(View.GONE);
             mPassportEntryAndExitImage.setVisibility(View.VISIBLE);
